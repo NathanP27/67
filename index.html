@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>For My Love 💜</title>
+    <title>Our Interactive Love Letter 💜</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -12,70 +12,57 @@
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
-    <div class="hearts" aria-hidden="true"></div>
-
+  <body class="locked">
     <main>
-      <section id="intro" class="intro active" aria-live="polite">
-        <div class="intro-card">
-          <p class="intro-message">A tiny surprise is waiting for you ✨</p>
-          <button id="openGift" class="gift-box" aria-label="Open surprise box">
-            <span class="gift-lid"></span>
-            <span class="gift-ribbon-v"></span>
-            <span class="gift-ribbon-h"></span>
-            <span class="gift-tag">for you</span>
-            <span class="gift-glow"></span>
+      <section id="intro" class="story-section intro-section" aria-live="polite">
+        <div class="intro-wrap">
+          <p class="eyebrow">Interactive love letter</p>
+          <h1>A letter hidden in a card</h1>
+          <p class="intro-note">Tap the card 7 times and watch the letter slowly peek out ✨</p>
+
+          <button id="mineCard" class="mine-card" aria-label="Tap to pull out the letter">
+            <span class="card-shell"></span>
+            <span class="letter-paper"></span>
+            <span class="wax-seal">❤</span>
           </button>
-          <p class="hint">Tap the box to open your letter</p>
+
+          <p id="progressText" class="progress-text">0 / 7 taps</p>
         </div>
       </section>
 
-      <section id="letterExperience" class="letter-experience" aria-hidden="true">
-        <article class="love-letter">
-          <div id="letterSlideshow" class="slideshow"></div>
-
-          <h1>To My Favorite Person</h1>
-          <p id="typewriter" class="typewriter"></p>
-
-          <div class="actions">
-            <button data-popup="memory">Memory Mini-Box</button>
-            <button data-popup="promises">Little Love Promises</button>
-            <button data-popup="future">Our Soft Future</button>
-          </div>
-
-          <div class="countdown-wrap">
-            <h2>Time since my heart chose you 💜</h2>
-            <p id="counter"></p>
-          </div>
-
-          <button id="revealFinale" class="finale-trigger">Open the final page ✨</button>
+      <section id="letterOne" class="story-section panel">
+        <article class="panel-card reveal-on-scroll">
+          <div id="topSlideshow" class="slideshow"></div>
+          <h2>Section Placeholder 01</h2>
+          <p>
+            Place your opening paragraph here. This section is part of the scroll-based letter flow.
+          </p>
         </article>
       </section>
 
-      <section id="finale" class="finale" aria-hidden="true">
-        <h2>Us, in cozy little lines</h2>
-        <p>
-          Here’s a cute ASCII-style ending page. You can later replace it with one generated from
-          your real photo together.
-        </p>
-        <pre class="ascii-art">
-           .-"""-.                 .-"""-.
-          /  .-.  \               /  .-.  \
-         |  /   \  |             |  /   \  |
-         |  \___/  |   YOU ❤ ME  |  \___/  |
-          \   ^   /               \   ^   /
-           `-._.-'                 `-._.-'
-          __/   \__               __/   \__
-         /  \___/  \             /  \___/  \
-        </pre>
-        <p class="signature">always yours, always us 💞</p>
+      <section class="story-section panel alt">
+        <article class="panel-card reveal-on-scroll">
+          <h2>Section Placeholder 02</h2>
+          <p>Add your next memory/story paragraph here.</p>
+          <div class="placeholder-box">Photo or quote placeholder</div>
+        </article>
+      </section>
+
+      <section class="story-section panel">
+        <article class="panel-card reveal-on-scroll">
+          <h2>Section Placeholder 03</h2>
+          <p>Add your promises or meaningful text here.</p>
+          <div class="placeholder-box">Another media placeholder</div>
+        </article>
+      </section>
+
+      <section class="story-section panel alt">
+        <article class="panel-card reveal-on-scroll">
+          <h2>Section Placeholder 04</h2>
+          <p>Add your closing message and future plans here.</p>
+        </article>
       </section>
     </main>
-
-    <dialog id="popupDialog">
-      <button id="closePopup" class="close-popup" aria-label="Close popup">×</button>
-      <div id="popupContent"></div>
-    </dialog>
 
     <script src="script.js"></script>
   </body>
