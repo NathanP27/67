@@ -1,118 +1,165 @@
-const openEnvelopeBtn = document.getElementById('openEnvelope');
+const requiredTaps = 7;
+let tapCount = 0;
+
+const body = document.body;
 const intro = document.getElementById('intro');
-const letterExperience = document.getElementById('letterExperience');
-const finale = document.getElementById('finale');
-const revealFinaleBtn = document.getElementById('revealFinale');
-const typewriterEl = document.getElementById('typewriter');
-const counterEl = document.getElementById('counter');
-const popupDialog = document.getElementById('popupDialog');
-const popupContent = document.getElementById('popupContent');
-const closePopup = document.getElementById('closePopup');
+const mineCard = document.getElementById('mineCard');
+const progressText = document.getElementById('progressText');
+const firstLetterSection = document.getElementById('letterOne');
+const topSlideshow = document.getElementById('topSlideshow');
 
-const startDate = new Date('2024-01-01T00:00:00');
-const letterText =
-  "My love, every day with you feels like magic wrapped in calm. You make the ordinary feel golden, and every laugh with you is my favorite song. Thank you for being my safe place and my biggest adventure.";
+const slides = [
+  'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1400&q=80',
+  'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=1400&q=80',
+  'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1400&q=80'
+];
 
-const popups = {
-  memory: {
-    title: 'Our Little Memory Box 📸',
-    body: `<ul>
-      <li>The first time you smiled at me and my brain forgot all words.</li>
-      <li>That walk where we talked for hours and time disappeared.</li>
-      <li>Every random laugh attack we had over absolutely nothing.</li>
-    </ul>`
-  },
-  promises: {
-    title: 'Promises I Keep 🤍',
-    body: `<ol>
-      <li>I’ll keep choosing you — in simple days and hard days.</li>
-      <li>I’ll listen deeply and love loudly.</li>
-      <li>I’ll keep building our little universe, one memory at a time.</li>
-    </ol>`
-  },
-  future: {
-    title: 'A Tiny Peek at Our Future 🌙',
-    body: `<p>
-      Cozy nights, messy kitchen dancing, silly selfies, tiny trips, big dreams,
-      and a forever where your hand is always in mine.
-    </p>`
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function adaptiveHeight(frame, image) {
+  if (!image.naturalWidth || !image.naturalHeight) {
+    return 280;
   }
-};
 
-function typeLetter(text) {
-  let i = 0;
+  const ratio = image.naturalWidth / image.naturalHeight;
+  const width = frame.clientWidth || 640;
+  const maxHeight = window.innerWidth < 640 ? 380 : 480;
+  const minHeight = window.innerWidth < 640 ? 180 : 220;
+
+  return clamp(width / ratio, minHeight, maxHeight);
+}
+
+function createSlideshow(container, imageList, intervalMs = 3000) {
+  if (!container || imageList.length === 0) {
+    return null;
+  }
+
+  let active = 0;
+
+  const frame = document.createElement('div');
+  frame.className = 'slide-frame';
+
+  const image = document.createElement('img');
+  image.className = 'slide-media';
+  image.alt = 'Photo placeholder';
+  image.loading = 'lazy';
+
+  frame.appendChild(image);
+  container.appendChild(frame);
+
+  const dotWrap = document.createElement('div');
+  dotWrap.className = 'slide-dots';
+
+  const dots = imageList.map(() => {
+    const dot = document.createElement('span');
+    dotWrap.appendChild(dot);
+    return dot;
+  });
+
+  container.appendChild(dotWrap);
+
+  function showSlide(index) {
+    active = index;
+    image.classList.add('fading');
+
+    setTimeout(() => {
+      image.src = imageList[active];
+    }, 120);
+
+    dots.forEach((dot, dotIndex) => {
+      dot.classList.toggle('active', dotIndex === active);
+    });
+  }
+
+  image.addEventListener('load', () => {
+    frame.style.height = `${adaptiveHeight(frame, image)}px`;
+    image.classList.remove('fading');
+  });
+
+  showSlide(0);
+
   const timer = setInterval(() => {
-    typewriterEl.textContent += text[i];
-    i += 1;
-    if (i >= text.length) {
+    showSlide((active + 1) % imageList.length);
+  }, intervalMs);
+
+  return {
+    refresh() {
+      frame.style.height = `${adaptiveHeight(frame, image)}px`;
+    },
+    destroy() {
       clearInterval(timer);
     }
-  }, 28);
+  };
 }
 
-function updateCounter() {
-  const now = new Date();
-  const diff = now - startDate;
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-  const minutes = Math.floor((diff / (1000 * 60)) % 60);
-  const seconds = Math.floor((diff / 1000) % 60);
+function revealScrollPanels() {
+  const panels = Array.from(document.querySelectorAll('.reveal-on-scroll'));
 
-  counterEl.textContent = `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds of loving you.`;
-}
-
-function openLetterExperience() {
-  openEnvelopeBtn.classList.add('open');
-
-  setTimeout(() => {
-    intro.classList.remove('active');
-    letterExperience.classList.add('active');
-    intro.setAttribute('aria-hidden', 'true');
-    letterExperience.setAttribute('aria-hidden', 'false');
-
-    if (!typewriterEl.textContent) {
-      typeLetter(letterText);
-    }
-  }, 900);
-}
-
-function showPopup(key) {
-  const chosen = popups[key];
-  if (!chosen) {
+  if (!('IntersectionObserver' in window)) {
+    panels.forEach((panel) => panel.classList.add('in-view'));
     return;
   }
 
-  popupContent.innerHTML = `<h3>${chosen.title}</h3>${chosen.body}`;
-  popupDialog.showModal();
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        }
+      });
+    },
+    {
+      threshold: 0.22
+    }
+  );
+
+  panels.forEach((panel) => observer.observe(panel));
 }
 
-openEnvelopeBtn.addEventListener('click', openLetterExperience);
+function updateTapProgress() {
+  progressText.textContent = `${tapCount} / ${requiredTaps} taps`;
+  const peekPercent = `${(tapCount / requiredTaps) * 72}%`;
+  mineCard.style.setProperty('--peek', peekPercent);
+}
 
-revealFinaleBtn.addEventListener('click', () => {
-  letterExperience.classList.remove('active');
-  finale.classList.add('active');
-  letterExperience.setAttribute('aria-hidden', 'true');
-  finale.setAttribute('aria-hidden', 'false');
-});
+function unlockLetter() {
+  intro.classList.add('unlocked');
 
-Array.from(document.querySelectorAll('[data-popup]')).forEach((btn) => {
-  btn.addEventListener('click', () => showPopup(btn.dataset.popup));
-});
+  setTimeout(() => {
+    body.classList.remove('locked');
+    firstLetterSection.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+  }, 780);
+}
 
-closePopup.addEventListener('click', () => popupDialog.close());
+mineCard.addEventListener('click', () => {
+  if (tapCount >= requiredTaps) {
+    return;
+  }
 
-popupDialog.addEventListener('click', (event) => {
-  const rect = popupDialog.getBoundingClientRect();
-  const clickedInDialog =
-    rect.top <= event.clientY &&
-    event.clientY <= rect.top + rect.height &&
-    rect.left <= event.clientX &&
-    event.clientX <= rect.left + rect.width;
+  tapCount += 1;
+  updateTapProgress();
 
-  if (!clickedInDialog) {
-    popupDialog.close();
+  mineCard.classList.remove('tapped');
+  void mineCard.offsetWidth;
+  mineCard.classList.add('tapped');
+
+  if (tapCount === requiredTaps) {
+    unlockLetter();
   }
 });
 
-setInterval(updateCounter, 1000);
-updateCounter();
+const slideshow = createSlideshow(topSlideshow, slides, 2800);
+
+window.addEventListener('resize', () => {
+  if (slideshow) {
+    slideshow.refresh();
+  }
+});
+
+revealScrollPanels();
+updateTapProgress();
