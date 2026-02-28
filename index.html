@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>For My Love 💌</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="sparkles" aria-hidden="true"></div>
+
+    <main>
+      <section id="intro" class="intro active" aria-live="polite">
+        <div class="intro-card">
+          <p class="intro-message">A special delivery for the love of my life</p>
+          <button id="openEnvelope" class="envelope" aria-label="Open love letter">
+            <span class="envelope-back"></span>
+            <span class="envelope-flap"></span>
+            <span class="envelope-letter">💌</span>
+          </button>
+          <p class="hint">Tap the letter to open your surprise</p>
+        </div>
+      </section>
+
+      <section id="letterExperience" class="letter-experience" aria-hidden="true">
+        <article class="love-letter">
+          <h1>To My Forever Person</h1>
+          <p id="typewriter" class="typewriter"></p>
+
+          <div class="actions">
+            <button data-popup="memory">Our Little Memory Box</button>
+            <button data-popup="promises">Promises I Keep</button>
+            <button data-popup="future">A Tiny Peek at Our Future</button>
+          </div>
+
+          <div class="countdown-wrap">
+            <h2>Every second with you is a gift</h2>
+            <p id="counter"></p>
+          </div>
+
+          <button id="revealFinale" class="finale-trigger">Open the final page ✨</button>
+        </article>
+      </section>
+
+      <section id="finale" class="finale" aria-hidden="true">
+        <h2>Us, in timeless lines</h2>
+        <p>
+          A little ASCII-style portrait vibe — you can replace this with one made from your real
+          photo later, but this is our "you + me" forever mode.
+        </p>
+        <pre class="ascii-art">
+             .-"""-.
+            / .===. \
+            \/ 6 6 \/
+            ( \___/ )      .-"""-.
+___ooo_____/`-----'\_____ / .===. \
+/                         \/ 0 0 \/
+|     YOU       ❤       ME (  V  )
+\__________________________/`---'\
+      | |  | |               | |
+      |_|  |_|               |_|
+        </pre>
+        <p class="signature">Forever yours. 💞</p>
+      </section>
+    </main>
+
+    <dialog id="popupDialog">
+      <button id="closePopup" class="close-popup" aria-label="Close popup">×</button>
+      <div id="popupContent"></div>
+    </dialog>
+
+    <script src="script.js"></script>
+  </body>
+</html>
